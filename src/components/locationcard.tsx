@@ -1,7 +1,7 @@
 // components/LocationCard.tsx
 
 import Link from "next/link";
-import { Location } from "../tpyes";
+import { Location } from "../app/tpyes";
 
 interface LocationCardProps {
   location: Location;
@@ -14,7 +14,7 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
       <p className="text-lg text-gray-400">Type: {location.type}</p>
       {/* Add more details as needed */}
       <Link href={`/location/${location.id}`}>
-        <span className="text-blue-500 hover:underline">View Residents</span> 
+        <span className="text-blue-500 hover:underline">View Residents</span>
       </Link>
     </div>
   );
