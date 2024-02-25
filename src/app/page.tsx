@@ -75,29 +75,31 @@ const Home = () => {
           <h2 className="text-lg font-semibold">Browse Locations</h2>
         </div>
         {/* Right side - Search input */}
-        <div className="flex items-center text-black h-11">
+        <div className="flex flex-col sm:flex-row items-center text-black ">
           <select
             value={searchType}
             onChange={(e) => setSearchType(e.target.value)}
-            className="p-2 focus:outline-none border border-black rounded-l-md h-full"
+            className="p-2 h-10 focus:outline-none border border-black rounded-l-md mb-2 sm:mb-0 md:w-2/3"
           >
             <option value="location">Location</option>
             <option value="character">Character</option>
             <option value="episode">Episode</option>
           </select>
-          <input
-            type="text"
-            placeholder={`Search by ${searchType} name`}
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="p-2 focus:outline-none border border-black h-full"
-          />
-          <button
-            onClick={handleSearch}
-            className="bg-transparent border h-full border-black text-white p-2 rounded-r-md focus:outline-none"
-          >
-            <FaSearch size={24} color="black" />
-          </button>
+          <div className="flex">
+            <input
+              type="text"
+              placeholder={`Search by ${searchType} name`}
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="p-2 focus:outline-none border border-black h-10"
+            />
+            <button
+              onClick={handleSearch}
+              className="bg-transparent border h-10 border-black text-white p-2 rounded-r-md focus:outline-none"
+            >
+              <FaSearch size={24} color="black" />
+            </button>
+          </div>
         </div>
       </div>
       {loading && (
@@ -150,7 +152,7 @@ const Home = () => {
 
       {showModal && !searchLoading && (
         <Modal onClose={handleModalClose}>
-          {characters.length == 0 || episodes.length == 0 ? (
+          {characters.length == 0 && searchType == "character" ? (
             <p>No {searchType} found</p>
           ) : (
             <>
@@ -163,7 +165,12 @@ const Home = () => {
                     linkPrefix="/residents"
                   />
                 )}
-
+            </>
+          )}
+          {searchType == "episode" && episodes.length == 0 ? (
+            <p>No episodefound</p>
+          ) : (
+            <>
               {episodes && episodes.length > 0 && searchType == "episode" && (
                 <CustomModalContent
                   data={episodes}
