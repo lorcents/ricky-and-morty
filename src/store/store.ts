@@ -2,7 +2,7 @@
 
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; // defaults to localStorage for the web
+import storage from 'redux-persist/lib/storage';
 
 import locationsReducer from './reducers';
 

@@ -1,9 +1,8 @@
 "use client";
-// hooks/useLocations.ts
 import { useState, useEffect, useCallback } from "react";
-import { Location } from "../app/tpyes";
-import {  useDispatch } from 'react-redux';
-import { updateLocations } from "@/store/actions";
+import { Episode, Location, Residents } from "../app/tpyes";
+import { useDispatch } from "react-redux";
+import { updateLocations, updateResidents } from "@/store/actions";
 
 interface PageInfo {
   count: number;
@@ -16,30 +15,36 @@ interface PageInfo {
 const useLocations = () => {
   const dispatch = useDispatch();
   const [locations, setLocations] = useState<Location[]>([]);
+  const [characters, setCharacters] = useState<Residents[]>([]);
+  const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [searchLoading, setSearchLoading] = useState<boolean>(true);
 
-  const fetchLocations = useCallback(async (url:string) => {
-    try {
-      setLoading(true);
-      const response = await fetch(url);
-      const data = await response.json();
+  const fetchLocations = useCallback(
+    async (url: string) => {
+      try {
+        setLoading(true);
+        const response = await fetch(url);
+        const data = await response.json();
 
-      setLocations(data.results);
-      dispatch(updateLocations(data.results));
-      setPageInfo({
-        count: data.info.count,
-        pages: data.info.pages,
-        next: data.info.next,
-        prev: data.info.prev,
-        currentPage: calculateCurrentPage(url),
-      });
-    } catch (error) {
-      console.error("Error fetching locations:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [dispatch]);
+        setLocations(data.results);
+        dispatch(updateLocations(data.results));
+        setPageInfo({
+          count: data.info.count,
+          pages: data.info.pages,
+          next: data.info.next,
+          prev: data.info.prev,
+          currentPage: calculateCurrentPage(url),
+        });
+      } catch (error) {
+        console.error("Error fetching locations:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [dispatch]
+  );
 
   const calculateCurrentPage = (url: string): number => {
     const match = url.match(/page=(\d+)/);
@@ -68,9 +73,42 @@ const useLocations = () => {
     fetchLocations(url);
   };
 
-  const handleSearch = (term: string) => {
-    const url = `https://rickandmortyapi.com/api/location/?name=${term}`;
+  const handleLocationSearch = (term: string) => {
+    const url = term
+      ? `https://rickandmortyapi.com/api/location/?name=${term}`
+      : 'https://rickandmortyapi.com/api/location'; 
     fetchLocations(url);
+  };
+
+  const handleCharacterSearch = async(term: string) => {
+    const url = `https://rickandmortyapi.com/api/character/?name=${term}`;
+    try {
+      setSearchLoading(true);
+      const response = await fetch(url);
+      const data = await response.json();
+      if(!data.results)return
+      dispatch(updateResidents(data.results));
+      setCharacters(data.results)
+    } catch (error) {
+      console.error("Error fetching characters:", error);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  const handleEpisodeSearch = async(code: string) => {
+    const url = `https://rickandmortyapi.com/api/episode/?episode=${code}`;
+    try {
+      setSearchLoading(true);
+      const response = await fetch(url);
+      const data = await response.json();
+      if(!data.results)return
+      setEpisodes(data.results)
+    } catch (error) {
+      console.error("Error fetching characters:", error);
+    } finally {
+      setSearchLoading(false);
+    }
   };
 
   return {
@@ -80,7 +118,12 @@ const useLocations = () => {
     fetchPreviousPage,
     loading,
     fetchPage,
-    handleSearch,
+    handleLocationSearch,
+    handleCharacterSearch,
+    characters,
+    handleEpisodeSearch,
+    episodes,
+    searchLoading
   };
 };
 
