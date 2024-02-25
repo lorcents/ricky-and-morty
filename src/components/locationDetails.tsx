@@ -32,6 +32,11 @@ const LocationDetails: React.FC<LocationDetailsProps> = ({ location }) => {
       resident.name.toLowerCase().includes(search.toLowerCase())
     );
     setFilteredResidents(filteredResidents);
+
+    const totalPages = Math.ceil(
+      (searchTerm.length > 0 ? filteredResidents.length : location.residents.length) / residentsPerPage
+    );
+    setTotalPages(totalPages);
   };
 
   useEffect(() => {
@@ -53,15 +58,12 @@ const LocationDetails: React.FC<LocationDetailsProps> = ({ location }) => {
         setResidents(residentData);
         dispatch(updateResidents(residentData));
 
-        if (searchTerm.length > 0) {
-          filterResidents(searchTerm);
-        }
-
         setLoading(false);
-        const totalPages = Math.ceil(
-          (searchTerm.length > 0 ? filteredResidents.length : location.residents.length) / residentsPerPage
-        );
-        setTotalPages(totalPages);
+        
+        if(searchTerm.length){
+          filterResidents(searchTerm);
+          setCurrentPage(1);
+          }
 
         
       } catch (error) {
@@ -72,7 +74,7 @@ const LocationDetails: React.FC<LocationDetailsProps> = ({ location }) => {
     if (location.residents.length > 0) {
       fetchResidents();
     }
-  }, [location.residents, currentPage, searchTerm, dispatch,filteredResidents]);
+  }, [location.residents, currentPage, dispatch,searchTerm]);
 
   
 
@@ -89,8 +91,11 @@ const LocationDetails: React.FC<LocationDetailsProps> = ({ location }) => {
   };
 
   const handleSearch = () => {
+    if(searchTerm.length){
     filterResidents(searchTerm);
     setCurrentPage(1);
+    }
+    
   };
 
   return (
@@ -117,7 +122,7 @@ const LocationDetails: React.FC<LocationDetailsProps> = ({ location }) => {
             type="text"
             placeholder="Search by resident name"
             value={searchTerm}
-            onChange={handleSearchChange}
+            onChange={(e)=>setSearchTerm(e.target.value)}
             className="rounded-l-md p-2 focus:outline-none border border-black"
           />
           <button
