@@ -8,8 +8,6 @@ const PesidentPage = () => {
   const residents = useSelector((state: RootState) => state.residents);
   const router = useRouter();
   const params = useParams();
-  console.log(residents);
-  console.log(params);
 
   if (!params.id || residents.length === 0) {
     return <p>Loading</p>;
@@ -20,7 +18,9 @@ const PesidentPage = () => {
     : undefined;
 
   if (!selectedResident) {
-    return <p>Location not found</p>;
+    return <p className="flex justify-center text-current text-lg font-bold">
+    Sorry, No location found 😔
+  </p>
   }
 
   return(

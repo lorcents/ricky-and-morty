@@ -6,7 +6,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
 import { updateResidentsNotes } from "@/store/actions";
 import { useDispatch } from "react-redux";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import Image from "next/image";
 
 interface LocationDetailsProps {
@@ -47,22 +47,24 @@ const ResidentDetails: React.FC<LocationDetailsProps> = ({ resident }) => {
   const handleNotesSubmit = () => {
     dispatch(updateResidentsNotes(resident.id, notes));
     setShowModal(false);
-    toast.success(`${resident.notes ? 'Edited note ': 'Added note'} successfully`);
+    toast.success(
+      `${resident.notes ? "Edited note " : "Added note"} successfully`
+    );
   };
 
   return (
     <>
+      <span
+        onClick={() => route.push("/")}
+        className="sm:flex items-center ml-8 hover:cursor-pointer "
+      >
+        <FaArrowLeft size={24} color="black" />
+        <p className="p-2">Back Home</p>
+      </span>
       {/* Resident Details */}
       <div className="flex flex-col md:flex-row m-4">
         {/* Left side (1/3 width) */}
         <div className="w-full md:w-1/3 p-4">
-          <span
-            onClick={() => route.push("/")}
-            className="sm:flex items-center hover:cursor-pointer "
-          >
-            <FaArrowLeft size={24} color="black" />
-            <p className="p-2">Back Home</p>
-          </span>
           <Image
             src={resident.image}
             alt={resident.name}
@@ -121,7 +123,8 @@ const ResidentDetails: React.FC<LocationDetailsProps> = ({ resident }) => {
             {episodes.map((episode, index) => (
               <div
                 key={index}
-                className="relative mb-2 border border-gray-400 p-4 rounded-md sm:flex sm:justify-between"
+                onClick={()=>route.push(`/episodes/${episode.id}`)}
+                className="relative mb-2 border border-gray-400 p-4 rounded-md sm:flex sm:justify-between hover:bg-gray-100 cursor-pointer"
               >
                 <div className="mb-2 sm:mb-0">
                   <div className="font-bold">Name: {episode.name}</div>

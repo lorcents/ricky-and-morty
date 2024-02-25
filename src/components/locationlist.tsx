@@ -5,7 +5,7 @@ import Link from "next/link";
 
 interface LocationTableProps {
   locations: Location[];
-  loading: boolean; // Add a loading state
+  loading: boolean;
 }
 
 const LocationTable: React.FC<LocationTableProps> = ({
@@ -24,11 +24,14 @@ const LocationTable: React.FC<LocationTableProps> = ({
     setSelectedLocation(null);
   };
 
-  useEffect(() => {
-    // Optionally handle loading-related logic here
-  }, [loading]);
+  useEffect(() => {}, [loading]);
 
-  // Show only the first 20 items when loading
+  if(!loading && !locations){
+    return <p className="flex justify-center text-current text-lg font-bold">
+    Sorry, No Loction found 😔
+  </p>
+  }
+
   const visibleLocations = loading ? locations.slice(0, 20) : locations;
 
   return (
@@ -66,7 +69,6 @@ const LocationTable: React.FC<LocationTableProps> = ({
                   className={`cursor-pointer ${
                     index % 2 === 0 ? "bg-slate-50" : "bg-white"
                   }`}
-                  // onClick={() => handleRowClick(location)}
                 >
                   <td className="py-2 pl-2 underline text-blue-600 hover:text-blue-800 visited:text-purple-600">
                     <Link key={location.id} href={`/location/${location.id}`}>
