@@ -7,6 +7,7 @@ import { FaPencilAlt } from "react-icons/fa";
 import { updateResidentsNotes } from "@/store/actions";
 import { useDispatch } from "react-redux";
 import {  toast } from "react-toastify";
+import Image from "next/image";
 
 interface LocationDetailsProps {
   resident: Residents;
@@ -62,9 +63,11 @@ const ResidentDetails: React.FC<LocationDetailsProps> = ({ resident }) => {
             <FaArrowLeft size={24} color="black" />
             <p className="p-2">Back Home</p>
           </span>
-          <img
+          <Image
             src={resident.image}
             alt={resident.name}
+            width={500}
+            height={500}
             className="w-full h-auto mb-4"
           />
           <h1 className="text-2xl font-bold mb-2">{resident.name}</h1>

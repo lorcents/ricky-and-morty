@@ -1,6 +1,6 @@
 "use client";
 // hooks/useLocations.ts
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Location } from "../app/tpyes";
 import {  useDispatch } from 'react-redux';
 import { updateLocations } from "@/store/actions";
@@ -19,7 +19,7 @@ const useLocations = () => {
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const fetchLocations = async (url: string) => {
+  const fetchLocations = useCallback(async (url:string) => {
     try {
       setLoading(true);
       const response = await fetch(url);
@@ -39,7 +39,7 @@ const useLocations = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dispatch]);
 
   const calculateCurrentPage = (url: string): number => {
     const match = url.match(/page=(\d+)/);
@@ -49,7 +49,7 @@ const useLocations = () => {
   useEffect(() => {
     // Fetch the first page initially
     fetchLocations("https://rickandmortyapi.com/api/location");
-  }, []);
+  }, [fetchLocations]);
 
   const fetchNextPage = () => {
     if (pageInfo && pageInfo.next) {

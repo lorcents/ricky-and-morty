@@ -62,13 +62,14 @@ const LocationTable: React.FC<LocationTableProps> = ({
               ))
             : visibleLocations.map((location, index) => (
                 <tr
+                  key={location.id}
                   className={`cursor-pointer ${
                     index % 2 === 0 ? "bg-slate-50" : "bg-white"
                   }`}
                   // onClick={() => handleRowClick(location)}
                 >
                   <td className="py-2 pl-2 underline text-blue-600 hover:text-blue-800 visited:text-purple-600">
-                    <Link key= {location.id} href={`/location/${location.id}`}>
+                    <Link key={location.id} href={`/location/${location.id}`}>
                       {location.name}
                     </Link>
                   </td>

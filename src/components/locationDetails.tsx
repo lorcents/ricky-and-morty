@@ -8,6 +8,7 @@ import { updateResidents } from "@/store/actions";
 import { useDispatch } from "react-redux";
 import { FaSearch } from "react-icons/fa";
 import {  FaArrowLeft } from "react-icons/fa";
+import Image from "next/image";
 
 
 interface LocationDetailsProps {
@@ -23,36 +24,44 @@ const LocationDetails: React.FC<LocationDetailsProps> = ({ location }) => {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const residentsPerPage = 20;
+  const filter = (residents:Residents[])=>{
+    const filteredresidents = residents.filter((resident) =>
+    resident.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  setFilteredResidents(filteredresidents);
+  }
 
   useEffect(() => {
     const fetchResidents = async () => {
       try {
         const startIdx = (currentPage - 1) * residentsPerPage;
         const endIdx = startIdx + residentsPerPage;
-
+  
         const residentPromises = location.residents
           .slice(startIdx, endIdx)
           .map(async (residentUrl: string) => {
             const response = await fetch(residentUrl);
             return response.json();
           });
-
+  
         const residentData = await Promise.all(residentPromises);
         setResidents(residentData);
         dispatch(updateResidents(residentData));
+  
+        // if (residentData.length) {
+        //   filter(residentData);
+        // }
       } catch (error) {
         console.error("Error fetching residents:", error);
       }
     };
-    if(residents.length){
-    filter(residents)
-    } 
-
+  
     // Only fetch residents if there are residents URLs
     if (location.residents.length > 0) {
       fetchResidents();
     }
-  }, [location.residents, currentPage,searchTerm]);
+  }, [location.residents, currentPage, searchTerm, dispatch]);
+  
 
   const totalPages = Math.ceil(location.residents.length / residentsPerPage);
 
@@ -70,12 +79,7 @@ const LocationDetails: React.FC<LocationDetailsProps> = ({ location }) => {
 
   }
 
-  const filter = (residents:Residents[])=>{
-    const filteredresidents = residents.filter((resident) =>
-    resident.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  setFilteredResidents(filteredresidents);
-  }
+  
   return (
     <div className="container mx-auto p-8">
            <span onClick={() => route.push('/')} className="sm:flex items-center hover:cursor-pointer "><FaArrowLeft size={24} color="black" /><p className="p-2">Back Home</p></span> 
@@ -115,9 +119,11 @@ const LocationDetails: React.FC<LocationDetailsProps> = ({ location }) => {
               className="bg-white p-4 rounded-md shadow-md card hover:bg-gray-100 cursor-pointer transition duration-300 ease-in-out"
               onClick={() => handleClick(resident.id)}
             >
-              <img
+              <Image
                 src={resident.image}
                 alt={resident.name}
+                width={500}
+                height={500}
                 className="w-full h-48 object-cover mb-4 rounded-md"
                 loading="lazy"
               />
