@@ -105,7 +105,7 @@ const LocationDetails: React.FC<LocationDetailsProps> = ({ location }) => {
         className="sm:flex items-center hover:cursor-pointer "
       >
         <FaArrowLeft size={24} color="black" />
-        <p className="p-2">Back Home</p>
+        <p className="p-2 underline text-blue-600 hover:text-blue-800">Back Home</p>
       </span>
 
       <div className="mb-4 sm:flex items-center justify-between ">
