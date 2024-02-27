@@ -23,6 +23,10 @@ export interface Residents {
   url: string;
   created: string;
   notes?: string;
+  location:{
+    name:string;
+    url:string;
+  }
 }
 
 export interface Episode {

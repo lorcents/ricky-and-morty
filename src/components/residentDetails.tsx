@@ -85,6 +85,7 @@ const ResidentDetails: React.FC<LocationDetailsProps> = ({ resident }) => {
           <p className="text-sm font-medium">Gender: {resident.gender}</p>
           <p className="text-sm font-medium">Type: {resident.type}</p>
           <p className="text-sm font-medium">Species: {resident.species}</p>
+          <p className="text-sm font-medium">Location: {resident.location.name}</p>
           {resident.notes && (
             <div className="mt-2 border-t pt-2 rounded-md shadow-sm bg-gray-100 dark:bg-gray-800 flex flex-col">
               <div className="flex  justify-between w-full px-2 py-1">
