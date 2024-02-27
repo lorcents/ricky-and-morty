@@ -62,7 +62,7 @@ const EpisodeDetails: React.FC<EpisodeDetailsProps> = ({ episode }) => {
         className="sm:flex items-center ml-8 hover:cursor-pointer mb-2 "
       >
         <FaArrowLeft size={24} color="black" />
-        <p className="p-2">Back Home</p>
+        <p className="p-2 underline text-blue-600 hover:text-blue-800">Back Home</p>
       </span>
 
       <div className="relative mb-2 border border-gray-400 p-4 rounded-md sm:flex sm:justify-between ">

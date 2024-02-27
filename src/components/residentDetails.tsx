@@ -8,6 +8,7 @@ import { updateResidentsNotes } from "@/store/actions";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import Link from "next/link";
 
 interface LocationDetailsProps {
   resident: Residents;
@@ -18,6 +19,7 @@ const ResidentDetails: React.FC<LocationDetailsProps> = ({ resident }) => {
   const route = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [notes, setNotes] = useState("");
+  const [locationId,setLocationId]=useState<number | undefined>(undefined)
 
   const [episodes, setEpisodes] = useState<Episode[]>([]);
 
@@ -28,6 +30,7 @@ const ResidentDetails: React.FC<LocationDetailsProps> = ({ resident }) => {
       );
       const episodeData = await Promise.all(episodeDataPromises);
       setEpisodes(episodeData);
+      hrefFunction(resident.location.url)
     };
 
     fetchEpisodeData();
@@ -52,6 +55,18 @@ const ResidentDetails: React.FC<LocationDetailsProps> = ({ resident }) => {
     );
   };
 
+  const hrefFunction = (url:string) => {
+    const idRegex = /\/(\d+)$/;
+    const match = url.match(idRegex);
+
+    if (match) {
+      const extractedId = match[1];
+      setLocationId(+extractedId)
+    } else {
+      setLocationId(undefined)
+    }
+  }
+
   return (
     <>
       <span
@@ -59,7 +74,7 @@ const ResidentDetails: React.FC<LocationDetailsProps> = ({ resident }) => {
         className="sm:flex items-center ml-8 hover:cursor-pointer "
       >
         <FaArrowLeft size={24} color="black" />
-        <p className="p-2">Back Home</p>
+        <p className="p-2 underline text-blue-600 hover:text-blue-800">Back Home</p>
       </span>
       {/* Resident Details */}
       <div className="flex flex-col md:flex-row m-4">
@@ -85,7 +100,10 @@ const ResidentDetails: React.FC<LocationDetailsProps> = ({ resident }) => {
           <p className="text-sm font-medium">Gender: {resident.gender}</p>
           <p className="text-sm font-medium">Type: {resident.type}</p>
           <p className="text-sm font-medium">Species: {resident.species}</p>
-          <p className="text-sm font-medium">Location: {resident.location.name}</p>
+          <div><Link  href ={`/location/${locationId}`}className="text-sm font-medium  ">
+            Location:<span className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"> {resident.location.name}</span>
+            </Link>
+            </div>
           {resident.notes && (
             <div className="mt-2 border-t pt-2 rounded-md shadow-sm bg-gray-100 dark:bg-gray-800 flex flex-col">
               <div className="flex  justify-between w-full px-2 py-1">
